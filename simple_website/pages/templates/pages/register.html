@@ -5,10 +5,24 @@
 {% block content %}
 <div class="container">
     <h1>Register</h1>
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
     <form method="post">
         {% csrf_token %}
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="phone_number" placeholder="Phone Number" required>
+        <label for="roles">Select Roles:</label>
+        <select name="roles" id="roles" multiple required>
+            <option value="admin">Admin</option>
+            <option value="organizer">Organizer</option>
+            <option value="player">Player</option>
+            <option value="seller">Seller</option>
+            <option value="guest">Guest</option>
+        </select>
         <button type="submit">Register</button>
     </form>
     <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>

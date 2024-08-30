@@ -8,6 +8,9 @@ SECRET_KEY = 'django-insecure-r&lz3)fp%vqdvfzrz7ixvjyqqo-t)er*0k^+rc6@c9=wguct9n
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# simple_website/settings.py
+
+AUTH_USER_MODEL = 'pages.User'  # Make sure this points to your custom user model
 
 INSTALLED_APPS = [
     'django.contrib.admin',
