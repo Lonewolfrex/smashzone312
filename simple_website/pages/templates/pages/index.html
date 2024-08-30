@@ -1,14 +1,12 @@
-<!-- pages/templates/pages/index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
-</head>
-<body>
+{% extends 'pages/base.html' %}  <!-- Ensure the path is correct based on your directory structure -->
+
+{% block title %}Index Page{% endblock %}  <!-- Title for the index page -->
+
+{% block content %}
+<div class="container">
     <h1>Welcome to the Index Page</h1>
+    <p>This is the main landing page of the website.</p>
     <a href="{% url 'register' %}">Register</a>
     <a href="{% url 'login' %}">Login</a>
-</body>
-</html>
+</div>
+{% endblock %}
