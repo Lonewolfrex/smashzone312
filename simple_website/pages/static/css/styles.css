@@ -1,4 +1,5 @@
 /* static/css/styles.css */
+
 body {
     background-color: #f2f2f2;
     font-family: Arial, sans-serif;
@@ -6,7 +7,7 @@ body {
 
 .container {
     background-color: white;
-    padding: 20px;
+    padding: 40px; /* Consistent padding for both pages */
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
@@ -16,6 +17,7 @@ body {
 h1 {
     text-align: center;
     color: #333;
+    margin-bottom: 20px; /* Added margin for spacing */
 }
 
 form {
@@ -23,11 +25,31 @@ form {
     flex-direction: column;
 }
 
-input[type=text], input[type=password] {
-    padding: 10px;
-    margin-bottom: 10px;
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Aligns items to stretch across the container */
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 1.5rem; /* Increased margin for better spacing */
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input[type=text],
+.form-group input[type=password],
+.form-group input[type=email] {
+    width: 100%;
+    padding: 10px; /* Increased padding for better touch targets */
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding is included in total width */
 }
 
 button {
@@ -35,10 +57,30 @@ button {
     color: white;
     padding: 10px;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
+    margin-top: 10px; /* Added margin for spacing */
+    font-size: 1rem; /* Increased font size for better readability */
 }
 
 button:hover {
     background-color: #45a049;
+}
+
+/* Additional styles for error messages */
+.error-message {
+    color: red;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+
+    .login-form {
+        width: 90%; /* Make the form wider on smaller screens */
+    }
 }
