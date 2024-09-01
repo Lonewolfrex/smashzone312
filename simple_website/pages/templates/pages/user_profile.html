@@ -1,0 +1,61 @@
+{% extends 'pages/base.html' %}
+{% load custom_filters %}  <!-- Load the custom filter -->
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>User Profile</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ profile_form.full_name.id_for_label }}">Full Name:</label>
+            {{ profile_form.full_name }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ profile_form.email.id_for_label }}">Email ID:</label>
+            {{ profile_form.email }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ profile_form.phone_number.id_for_label }}">Phone Number:</label>
+            {{ profile_form.phone_number }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ profile_form.address.id_for_label }}">Address:</label>
+            {{ profile_form.address }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ profile_form.sports_nickname.id_for_label }}">Sports Nickname:</label>
+            {{ profile_form.sports_nickname }}
+        </div>
+
+        <div class="form-group">
+            <h2>Favorite Sports</h2>
+            {% for sport in sports %}
+                <div class="form-group">
+                    <label for="level_{{ sport.id }}">{{ sport.name }}:</label>
+                    <select name="level_{{ sport.id }}" id="level_{{ sport.id }}">
+                        <option value="">Select Level</option>
+                        <option value="beginner" {% if user_sport_levels|get_item:sport.id == 'beginner' %}selected{% endif %}>Beginner</option>
+                        <option value="intermediate" {% if user_sport_levels|get_item:sport.id == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                        <option value="advanced" {% if user_sport_levels|get_item:sport.id == 'advanced' %}selected{% endif %}>Advanced</option>
+                        <option value="audience" {% if user_sport_levels|get_item:sport.id == 'audience' %}selected{% endif %}>Audience</option>
+                    </select>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ profile_form.profile_picture.id_for_label }}">Profile Picture:</label>
+            {{ profile_form.profile_picture }}
+        </div>
+
+        <button type="submit">Save Profile</button>
+    </form>
+</div>
+{% endblock %}

@@ -85,9 +85,8 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # This is where collectstatic will gather files
 STATICFILES_DIRS = [
-    BASE_DIR / 'pages' / 'static',
+    os.path.join(BASE_DIR, 'pages', 'static'),  # Ensure this path is correct
 ]
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

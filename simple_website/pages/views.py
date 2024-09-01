@@ -5,6 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth import get_user_model
 from .models import Role
+from datetime import datetime
+from .models import UserProfile, Sport, UserSport
+from .forms import UserProfileForm
 
 def index(request):
     return render(request, 'pages/index.html')
@@ -69,10 +72,57 @@ def login_view(request):  # Ensure this function is defined
 
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request, 'pages/dashboard.html')
+        current_year = datetime.now().year
+        return render(request, 'pages/dashboard.html', {'current_year': current_year})
     else:
-        return redirect('login')  # Redirect to login if user is not authenticated
+        return redirect('login') # Redirect to login if user is not authenticated
 
 def logout_view(request):
     logout(request)
-    return redirect('index')  # Redirect to the index page after logout
+    return redirect('index')
+
+def user_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        
+        # Process sports and levels
+        for sport in Sport.objects.all():
+            level = request.POST.get(f'level_{sport.id}')  # Get the level for each sport
+            if level:
+                user_sport, created = UserSport.objects.get_or_create(
+                    user_profile=profile,
+                    sport=sport,
+                    defaults={'level': level}
+                )
+                if not created:
+                    user_sport.level = level  # Update level if already exists
+                    user_sport.save()
+
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('user_profile')  # Redirect to the same page after saving
+    else:
+        profile_form = UserProfileForm(instance=profile)
+
+    sports = Sport.objects.all()  # Get all available sports
+    user_sports = UserSport.objects.filter(user_profile=profile)  # Get user's sports
+
+    # Prepare a dictionary to hold user sports and levels
+    user_sport_levels = {user_sport.sport.id: user_sport.level for user_sport in user_sports}
+
+    return render(request, 'pages/user_profile.html', {
+        'profile_form': profile_form,
+        'sports': sports,
+        'user_sport_levels': user_sport_levels,  # Pass the dictionary to the template
+    })
+
+
+def tournament_calendar(request):
+    # Logic for user profile
+    return render(request, 'pages/tournament_calendar.html') 
+
+def sports_update(request):
+    # Logic for user profile
+    return render(request, 'pages/sports_update.html') # Redirect to the index page after logout
