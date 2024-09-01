@@ -11,7 +11,6 @@ class User(AbstractUser):
     class Meta:
         permissions = [
             ('can_view_dashboard', 'Can view dashboard'),
-            # Add other custom permissions here if needed
         ]
 
 class Role(models.Model):
@@ -54,4 +53,3 @@ class UserSport(models.Model):
     def __str__(self):
         return f"{self.user_profile.full_name} - {self.sport.name} ({self.level})"
     
-
