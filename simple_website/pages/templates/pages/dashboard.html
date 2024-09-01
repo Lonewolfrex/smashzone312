@@ -3,9 +3,37 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Dashboard</h1>
-    <p>Welcome, {{ request.user.username }}!</p>
-    <a href="{% url 'logout' %}">Logout</a>
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <h1>Welcome to Your Dashboard {{ request.user.username }}</h1>
+    </header>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'user_profile' %}">User Profile</a></li>
+            <li><a href="{% url 'tournament_calendar' %}">Tournament Calendar</a></li>
+            <li><a href="{% url 'sports_update' %}">Sports Update</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <section class="welcome-section">
+        <h2>Welcome Back!</h2>
+        <p>We’re glad to see you again. Check out the latest tournaments and events below.</p>
+    </section>
+
+    <section class="tournaments-section">
+        <h2>Upcoming Tournaments</h2>
+        <ul>
+            <li>Tournament 1 - Date</li>
+            <li>Tournament 2 - Date</li>
+            <li>Tournament 3 - Date</li>
+        </ul>
+    </section>
+
+    <footer class="dashboard-footer">
+        <p>&copy; {{ current_year }} Your Company Name. All rights reserved.</p>
+    </footer>
 </div>
 {% endblock %}
