@@ -53,4 +53,3 @@ class UserSport(models.Model):
     def __str__(self):
         return f"{self.user_profile.full_name} - {self.sport.name} ({self.level})"
     
-
