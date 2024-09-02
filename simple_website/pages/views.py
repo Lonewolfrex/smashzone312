@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from .models import Role
 from datetime import datetime
 from .models import UserProfile, Sport, UserSport
-from .forms import UserProfileForm
+from .forms import UserProfileForm, UserSportForm
 
 def index(request):
     return render(request, 'pages/index.html')
@@ -83,42 +83,58 @@ def logout_view(request):
 
 def user_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
+    sports = Sport.objects.all()  # Fetch all sports from the database
 
     if request.method == 'POST':
         profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        
-        # Process sports and levels
-        for sport in Sport.objects.all():
-            level = request.POST.get(f'level_{sport.id}')  # Get the level for each sport
-            if level:
-                user_sport, created = UserSport.objects.get_or_create(
-                    user_profile=profile,
-                    sport=sport,
-                    defaults={'level': level}
-                )
-                if not created:
-                    user_sport.level = level  # Update level if already exists
-                    user_sport.save()
 
         if profile_form.is_valid():
-            profile_form.save()
-            return redirect('user_profile')  # Redirect to the same page after saving
+            profile_form.save()  # Save the profile details
+
+            # Save player types and club names
+            profile.sports_club_player = request.POST.get('sports_club_player') == 'on'
+            profile.club_name_sports = request.POST.get('club_name_sports', '')
+            profile.society_club_player = request.POST.get('society_club_player') == 'on'
+            profile.club_name_society = request.POST.get('club_name_society', '')
+            profile.corporate_player = request.POST.get('corporate_player') == 'on'
+            profile.club_name_corporate = request.POST.get('club_name_corporate', '')
+            profile.save()  # Save the updated profile
+
+            # Process selected sports and levels
+            selected_sports = request.POST.getlist('sports')  # Get the selected sports
+            for sport_id in selected_sports:
+                sport = Sport.objects.get(id=sport_id)
+                level = request.POST.get(f'level_{sport.id}')  # Ensure this matches your input name
+                if level:
+                    user_sport, created = UserSport.objects.get_or_create(
+                        user_profile=profile,
+                        sport=sport,
+                        defaults={'level': level}
+                    )
+                    if not created:
+                        user_sport.level = level  # Update level if already exists
+                        user_sport.save()
+
+            return redirect('view_profile')  # Redirect to the view profile page after saving
     else:
         profile_form = UserProfileForm(instance=profile)
-
-    sports = Sport.objects.all()  # Get all available sports
-    user_sports = UserSport.objects.filter(user_profile=profile)  # Get user's sports
-
-    # Prepare a dictionary to hold user sports and levels
-    user_sport_levels = {user_sport.sport.id: user_sport.level for user_sport in user_sports}
+        print(profile_form.errors)
+    user_sports = UserSport.objects.filter(user_profile=profile)
 
     return render(request, 'pages/user_profile.html', {
         'profile_form': profile_form,
-        'sports': sports,
-        'user_sport_levels': user_sport_levels,  # Pass the dictionary to the template
+        'user_sports': user_sports,
+        'sports': sports,  # Pass the sports to the template
     })
+    
+def view_profile(request):
+    profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
+    user_sports = UserSport.objects.filter(user_profile=profile)  # Get all sports associated with the profile
 
-
+    return render(request, 'pages/view_profile.html', {
+        'profile': profile,
+        'user_sports': user_sports,
+    })
 def tournament_calendar(request):
     # Logic for user profile
     return render(request, 'pages/tournament_calendar.html') 

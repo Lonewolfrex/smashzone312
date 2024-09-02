@@ -1,5 +1,5 @@
 {% extends 'pages/base.html' %}
-{% load custom_filters %}  <!-- Load the custom filter -->
+{% load custom_filters %}
 
 {% block title %}User Profile{% endblock %}
 
@@ -34,28 +34,120 @@
             {{ profile_form.sports_nickname }}
         </div>
 
+        <h2>Player Type</h2>
         <div class="form-group">
-            <h2>Favorite Sports</h2>
-            {% for sport in sports %}
-                <div class="form-group">
-                    <label for="level_{{ sport.id }}">{{ sport.name }}:</label>
-                    <select name="level_{{ sport.id }}" id="level_{{ sport.id }}">
-                        <option value="">Select Level</option>
-                        <option value="beginner" {% if user_sport_levels|get_item:sport.id == 'beginner' %}selected{% endif %}>Beginner</option>
-                        <option value="intermediate" {% if user_sport_levels|get_item:sport.id == 'intermediate' %}selected{% endif %}>Intermediate</option>
-                        <option value="advanced" {% if user_sport_levels|get_item:sport.id == 'advanced' %}selected{% endif %}>Advanced</option>
-                        <option value="audience" {% if user_sport_levels|get_item:sport.id == 'audience' %}selected{% endif %}>Audience</option>
-                    </select>
-                </div>
-            {% endfor %}
+            {{ profile_form.sports_club_player }} Sports Club Player
+            <input type="text" id="club_name_sports" name="club_name_sports" placeholder="Enter club name" style="display: none;">
         </div>
+        <div class="form-group">
+            {{ profile_form.society_club_player }} Society Club Player
+            <input type="text" id="club_name_society" name="club_name_society" placeholder="Enter society name" style="display: none;">
+        </div>
+        <div class="form-group">
+            {{ profile_form.corporate_player }} Corporate Player
+            <input type="text" id="club_name_corporate" name="club_name_corporate" placeholder="Enter corporate name" style="display: none;">
+        </div>
+
+        <h2>Select Sports and Experience Level</h2>
+        <div class="form-group">
+            <label for="sport-select">Select Sport:</label>
+            <select id="sport-select" class="form-control">
+                <option value="">Choose a sport</option>
+                {% for sport in sports %}
+                    <option value="{{ sport.id }}">{{ sport.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="level-select">Select Experience Level:</label>
+            <select id="level-select" class="form-control">
+                <option value="">Choose experience level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="audience">Audience</option>
+            </select>
+        </div>
+
+        <button type="button" id="add-sport" class="btn btn-primary">Add Sport</button>
+
+        <table class="table" id="sports-table">
+            <thead>
+                <tr>
+                    <th>Sport</th>
+                    <th>Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_sport in user_sports %}
+                <tr>
+                    <td>{{ user_sport.sport.name }}</td>
+                    <td>{{ user_sport.level|title }}</td>
+                </tr>
+                {% empty %}
+                <tr class="no-sports">
+                    <td colspan="2">No sports selected.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         <div class="form-group">
             <label for="{{ profile_form.profile_picture.id_for_label }}">Profile Picture:</label>
             {{ profile_form.profile_picture }}
         </div>
 
-        <button type="submit">Save Profile</button>
+        <button type="submit" class="btn btn-success">Save Profile</button>
     </form>
 </div>
+
+<script>
+    document.getElementById('add-sport').addEventListener('click', function() {
+        const sportSelect = document.getElementById('sport-select');
+        const levelSelect = document.getElementById('level-select');
+        
+        const selectedSportId = sportSelect.value;
+        const selectedSportName = sportSelect.options[sportSelect.selectedIndex].text;
+        const selectedLevel = levelSelect.options[levelSelect.selectedIndex].value; // Get the value
+
+        // Check if the sport is already in the table
+        const tableRows = document.querySelectorAll('#sports-table tbody tr');
+        let sportExists = false;
+
+        tableRows.forEach(row => {
+            if (row.dataset.sportId === selectedSportId) {
+                sportExists = true;
+            }
+        });
+
+        if (!sportExists && selectedSportId && selectedLevel) {
+            const newRow = document.createElement('tr');
+            newRow.dataset.sportId = selectedSportId;  // Set the sport ID as a data attribute
+            newRow.innerHTML = `<td>${selectedSportName}</td><td>${selectedLevel}</td>`;
+            document.querySelector('#sports-table tbody').appendChild(newRow);
+
+            // Remove "No sports selected" row if it exists
+            const noSportsRow = document.querySelector('#sports-table tbody tr.no-sports');
+            if (noSportsRow) {
+                noSportsRow.remove();
+            }
+
+            // Create hidden inputs to store selected sports and levels for form submission
+            const hiddenInputSport = document.createElement('input');
+            hiddenInputSport.type = 'hidden';
+            hiddenInputSport.name = 'sports';  // Name should match what you access in the view
+            hiddenInputSport.value = selectedSportId;
+            document.querySelector('form').appendChild(hiddenInputSport);
+
+            const hiddenInputLevel = document.createElement('input');
+            hiddenInputLevel.type = 'hidden';
+            hiddenInputLevel.name = `level_${selectedSportId}`;  // Unique name for each sport
+            hiddenInputLevel.value = selectedLevel;
+            document.querySelector('form').appendChild(hiddenInputLevel);
+        } else {
+            alert('This sport is already selected or please select both sport and level.');
+        }
+    });
+</script>
 {% endblock %}
