@@ -27,13 +27,19 @@ class Sport(models.Model):
         return self.name
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=15)
-    address = models.TextField()
+    phone_number = models.CharField(max_length=20)
+    address = models.CharField(max_length=200)
     sports_nickname = models.CharField(max_length=50)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures', null=True, blank=True)
+    sports_club_player = models.BooleanField(default=False)
+    club_name_sports = models.CharField(max_length=100, blank=True)
+    society_club_player = models.BooleanField(default=False)
+    club_name_society = models.CharField(max_length=100, blank=True)
+    corporate_player = models.BooleanField(default=False)
+    club_name_corporate = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -52,4 +58,3 @@ class UserSport(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.full_name} - {self.sport.name} ({self.level})"
-    

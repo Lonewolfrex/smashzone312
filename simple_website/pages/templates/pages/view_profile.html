@@ -1,0 +1,74 @@
+{% extends 'pages/base.html' %}
+{% load custom_filters %} <!-- Load static files for CSS and images -->
+
+{% block title %}View Profile{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'dashboard' %}">Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">  <!-- Use ml-auto to align items to the right -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'view_profile' %}">View Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="profile-container">
+    <h1>View Profile</h1>
+    <div class="profile-info">
+        <div class="profile-details">
+            <p><strong>Full Name:</strong> {{ profile.full_name }}</p>
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+            <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+            <p><strong>Address:</strong> {{ profile.address }}</p>
+            <p><strong>Sports Nickname:</strong> {{ profile.sports_nickname }}</p>
+
+            <h2>Player Type</h2>
+            {% if profile.sports_club_player %}
+                <p>Sports Club Player: {{ profile.club_name_sports }}</p>
+            {% endif %}
+            {% if profile.society_club_player %}
+                <p>Society Club Player: {{ profile.club_name_society }}</p>
+            {% endif %}
+            {% if profile.corporate_player %}
+                <p>Corporate Player: {{ profile.club_name_corporate }}</p>
+            {% endif %}
+
+            <h2>Selected Sports</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sport</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_sport in user_sports %}
+                    <tr>
+                        <td>{{ user_sport.sport.name }}</td>
+                        <td>{{ user_sport.level|title }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="profile-image">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid">
+            {% else %}
+                <p>No profile picture uploaded.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'user_profile' %}" class="btn btn-secondary">Edit Profile</a>
+</div>
+{% endblock %}
