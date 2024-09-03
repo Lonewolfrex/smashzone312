@@ -11,10 +11,11 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.logout_view, name='logout'),
-    path('profile/', views.user_profile, name='user_profile'),  # Ensure this line exists
+    path('profile/', views.navigate_user_profile, name='navigate_user_profile'),
     path('tournament_calendar/', views.tournament_calendar, name='tournament_calendar'),
     path('sports_update/', views.sports_update, name='sports_update'),
     path('view-profile/', views.view_profile, name='view_profile'),
+    path('user-profile/', views.user_profile, name='user_profile'), 
 ]
 
 if settings.DEBUG:

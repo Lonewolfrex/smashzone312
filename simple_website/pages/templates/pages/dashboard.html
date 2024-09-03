@@ -5,13 +5,13 @@
 {% block content %}
 <div class="dashboard-container">
     <header class="dashboard-header">
-        <h1>Welcome to Your Dashboard {{ request.user.username }}</h1>
+        <h1>Welcome to Your Dashboard, {{ request.user.username }}</h1>
     </header>
 
     <!-- Navbar -->
     <nav class="navbar">
         <ul>
-            <li><a href="{% url 'user_profile' %}">User Profile</a></li>
+            <li><a href="{% url 'navigate_user_profile' %}">User Profile</a></li>  <!-- Updated link -->
             <li><a href="{% url 'tournament_calendar' %}">Tournament Calendar</a></li>
             <li><a href="{% url 'sports_update' %}">Sports Update</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
