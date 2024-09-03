@@ -135,6 +135,16 @@ def view_profile(request):
         'profile': profile,
         'user_sports': user_sports,
     })
+
+def navigate_user_profile(request):
+    # Check if the user has a profile
+    if hasattr(request.user, 'profile'):
+        # If the profile exists, redirect to the View Profile page
+        return redirect('view_profile')
+    else:
+        # If the profile does not exist, redirect to the User Profile page
+        return redirect('user_profile')
+
 def tournament_calendar(request):
     # Logic for user profile
     return render(request, 'pages/tournament_calendar.html') 
