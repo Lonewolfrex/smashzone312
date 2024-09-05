@@ -27,13 +27,22 @@
         <h2>Welcome Back!</h2>
         <p>We’re glad to see you again. Check out the latest tournaments and events below.</p>
     </section>
-
+    
     <section class="tournaments-section">
-        <h2>Upcoming Tournaments</h2>
+        <h2>All Tournaments</h2>
         <ul>
-            <li>Tournament 1 - Date</li>
-            <li>Tournament 2 - Date</li>
-            <li>Tournament 3 - Date</li>
+            {% for tournament in tournaments %}
+                <li>
+                    <strong>{{ tournament.name }}</strong> - Phase: {{ tournament.get_phase_display }} (Date: {{ tournament.date }})
+                    {% if is_organizer and tournament.organizer == request.user %}
+                        <a href="{% url 'edit_tournament' tournament.id %}">Edit</a>  <!-- Link to edit phase -->
+                    {% else %}
+                        <a href="{% url 'register_tournament' tournament.id %}">Register</a>  <!-- Link to register -->
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No tournaments available at the moment.</li>
+            {% endfor %}
         </ul>
     </section>
 

@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth import get_user_model
 from .models import Role
 from datetime import datetime
-from .models import UserProfile, Sport, UserSport
+from .models import UserProfile, Sport, UserSport, Tournament
 from .forms import UserProfileForm, UserSportForm
 
 def index(request):
@@ -73,12 +73,15 @@ def login_view(request):  # Ensure this function is defined
 def dashboard(request):
     if request.user.is_authenticated:
         current_year = datetime.now().year
-        is_organizer = request.user.roles.filter(name='organizer').exists()  # Check if user has 'Organizer' role
-        print(f"User roles: {request.user.roles.all()}")  # Debugging line
-        print(f"Is Organizer: {is_organizer}")  # Debugging line
+        is_organizer = request.user.roles.filter(name='organizer').exists()
+
+        # Fetch all tournaments for display
+        tournaments = Tournament.objects.all()
+
         return render(request, 'pages/dashboard.html', {
             'current_year': current_year,
-            'is_organizer': is_organizer,  # Pass the organizer status to the template
+            'is_organizer': is_organizer,
+            'tournaments': tournaments,
         })
     else:
         return redirect('login')
@@ -161,6 +164,42 @@ def sports_update(request):
 
 def create_tournament(request):
     if request.method == 'POST':
-        # Handle tournament creation logic here
-        pass  # Replace with your logic
-    return render(request, 'pages/create_tournament.html')  # Render the create tournament form
+        tournament_name = request.POST['tournament_name']
+        tournament_date = request.POST['date']
+
+        # Create the tournament instance
+        Tournament.objects.create(
+            name=tournament_name,
+            date=tournament_date,
+            organizer=request.user
+        )
+
+        return redirect('dashboard')  # Redirect to the dashboard after creating the tournament
+
+    return render(request, 'pages/create_tournament.html')
+
+def edit_tournament(request, tournament_id):
+    tournament = Tournament.objects.get(id=tournament_id)
+
+    # Ensure that only the organizer can edit their tournament
+    if tournament.organizer != request.user:
+        return redirect('dashboard')  # Redirect to dashboard if the user is not the organizer
+
+    if request.method == 'POST':
+        tournament.name = request.POST['tournament_name']
+        tournament.date = request.POST['date']
+        tournament.phase = request.POST['phase']  # Assuming you want to allow phase changes here
+        tournament.save()
+        return redirect('dashboard')  # Redirect to the dashboard after updating
+
+    return render(request, 'pages/edit_tournament.html', {
+        'tournament': tournament,
+    })
+    
+def register_tournament(request, tournament_id):
+    tournament = Tournament.objects.get(id=tournament_id)
+
+    # Logic to register the user for the tournament
+    # For example, you might want to create a Registration instance here
+
+    return redirect('dashboard')  # Redirect to the dashboard after registration    
