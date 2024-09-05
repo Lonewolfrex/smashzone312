@@ -10,10 +10,15 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <ul>
-            <li><a href="{% url 'navigate_user_profile' %}">User Profile</a></li>  <!-- Updated link -->
+        <ul class="nav-links">
+            <li><a href="{% url 'navigate_user_profile' %}">User Profile</a></li>
             <li><a href="{% url 'tournament_calendar' %}">Tournament Calendar</a></li>
             <li><a href="{% url 'sports_update' %}">Sports Update</a></li>
+            {% if is_organizer %}  <!-- Check if user is an organizer -->
+                <li><a href="{% url 'create_tournament' %}">Create Tournament</a></li>  <!-- Link to create tournament -->
+            {% endif %}
+        </ul>
+        <ul class="nav-links right">
             <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
     </nav>

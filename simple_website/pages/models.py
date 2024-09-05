@@ -36,10 +36,13 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(upload_to='profile_pictures', null=True, blank=True)
     sports_club_player = models.BooleanField(default=False)
     club_name_sports = models.CharField(max_length=100, blank=True)
+    club_location_sports = models.CharField(max_length=200, blank=True)  # New field for location
     society_club_player = models.BooleanField(default=False)
     club_name_society = models.CharField(max_length=100, blank=True)
+    club_location_society = models.CharField(max_length=200, blank=True)  # New field for location
     corporate_player = models.BooleanField(default=False)
     club_name_corporate = models.CharField(max_length=100, blank=True)
+    club_location_corporate = models.CharField(max_length=200, blank=True)  
 
     def __str__(self):
         return self.user.username

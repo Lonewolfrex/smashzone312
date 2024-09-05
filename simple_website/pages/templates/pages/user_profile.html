@@ -38,14 +38,17 @@
         <div class="form-group">
             {{ profile_form.sports_club_player }} Sports Club Player
             <input type="text" id="club_name_sports" name="club_name_sports" placeholder="Enter club name" style="display: none;">
+            <input type="text" id="club_location_sports" name="club_location_sports" placeholder="Enter location" style="display: none;"> <!-- Location field -->
         </div>
         <div class="form-group">
             {{ profile_form.society_club_player }} Society Club Player
             <input type="text" id="club_name_society" name="club_name_society" placeholder="Enter society name" style="display: none;">
+            <input type="text" id="club_location_society" name="club_location_society" placeholder="Enter location" style="display: none;"> <!-- Location field -->
         </div>
         <div class="form-group">
             {{ profile_form.corporate_player }} Corporate Player
             <input type="text" id="club_name_corporate" name="club_name_corporate" placeholder="Enter corporate name" style="display: none;">
+            <input type="text" id="club_location_corporate" name="club_location_corporate" placeholder="Enter location" style="display: none;"> <!-- Location field -->
         </div>
 
         <h2>Select Sports and Experience Level</h2>
@@ -148,6 +151,24 @@
         } else {
             alert('This sport is already selected or please select both sport and level.');
         }
+    });
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Determine the prefix based on the checkbox ID
+            const prefix = this.id.split('_')[0]; // Get the prefix (sports, society, corporate)
+            const clubNameInput = document.getElementById(`club_name_${prefix}`);
+            const clubLocationInput = document.getElementById(`club_location_${prefix}`);
+
+            if (this.checked) {
+                clubNameInput.style.display = 'block';
+                clubLocationInput.style.display = 'block';
+            } else {
+                clubNameInput.style.display = 'none';
+                clubLocationInput.style.display = 'none';
+                clubNameInput.value = ''; // Clear the value
+                clubLocationInput.value = ''; // Clear the value
+            }
+        });
     });
 </script>
 {% endblock %}

@@ -73,9 +73,15 @@ def login_view(request):  # Ensure this function is defined
 def dashboard(request):
     if request.user.is_authenticated:
         current_year = datetime.now().year
-        return render(request, 'pages/dashboard.html', {'current_year': current_year})
+        is_organizer = request.user.roles.filter(name='organizer').exists()  # Check if user has 'Organizer' role
+        print(f"User roles: {request.user.roles.all()}")  # Debugging line
+        print(f"Is Organizer: {is_organizer}")  # Debugging line
+        return render(request, 'pages/dashboard.html', {
+            'current_year': current_year,
+            'is_organizer': is_organizer,  # Pass the organizer status to the template
+        })
     else:
-        return redirect('login') # Redirect to login if user is not authenticated
+        return redirect('login')
 
 def logout_view(request):
     logout(request)
@@ -152,3 +158,9 @@ def tournament_calendar(request):
 def sports_update(request):
     # Logic for user profile
     return render(request, 'pages/sports_update.html') # Redirect to the index page after logout
+
+def create_tournament(request):
+    if request.method == 'POST':
+        # Handle tournament creation logic here
+        pass  # Replace with your logic
+    return render(request, 'pages/create_tournament.html')  # Render the create tournament form

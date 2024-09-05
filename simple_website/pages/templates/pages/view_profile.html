@@ -32,13 +32,13 @@
 
             <h2>Player Type</h2>
             {% if profile.sports_club_player %}
-                <p>Sports Club Player: {{ profile.club_name_sports }}</p>
+                <p>Sports Club Player: {{ profile.club_name_sports }} (Location: {{ profile.club_location_sports }})</p>
             {% endif %}
             {% if profile.society_club_player %}
-                <p>Society Club Player: {{ profile.club_name_society }}</p>
+                <p>Society Club Player: {{ profile.club_name_society }} (Location: {{ profile.club_location_society }})</p>
             {% endif %}
             {% if profile.corporate_player %}
-                <p>Corporate Player: {{ profile.club_name_corporate }}</p>
+                <p>Corporate Player: {{ profile.club_name_corporate }} (Location: {{ profile.club_location_corporate }})</p>
             {% endif %}
 
             <h2>Selected Sports</h2>
