@@ -1,0 +1,24 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Edit Tournament Phase{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit Tournament Phase: {{ tournament.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="phase">Select Phase:</label>
+            <select id="phase" name="phase">
+                <option value="announcement" {% if tournament.phase == 'announcement' %}selected{% endif %}>Tournament Announcement and Promotion</option>
+                <option value="registration_open" {% if tournament.phase == 'registration_open' %}selected{% endif %}>Tournament Registration Open</option>
+                <option value="registration_close" {% if tournament.phase == 'registration_close' %}selected{% endif %}>Tournament Registration Close</option>
+                <option value="begin" {% if tournament.phase == 'begin' %}selected{% endif %}>Tournament Begin</option>
+                <option value="end" {% if tournament.phase == 'end' %}selected{% endif %}>Tournament End</option>
+                <option value="ceremony" {% if tournament.phase == 'ceremony' %}selected{% endif %}>Tournament Ceremony</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Update Phase</button>
+    </form>
+</div>
+{% endblock %}

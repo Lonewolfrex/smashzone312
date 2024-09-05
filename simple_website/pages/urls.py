@@ -17,6 +17,9 @@ urlpatterns = [
     path('view-profile/', views.view_profile, name='view_profile'),
     path('user-profile/', views.user_profile, name='user_profile'),
     path('create-tournament/', views.create_tournament, name='create_tournament'), 
+    path('create-tournament/', views.create_tournament, name='create_tournament'),
+    path('edit-tournament/<int:tournament_id>/', views.edit_tournament, name='edit_tournament'),
+    path('register-tournament/<int:tournament_id>/', views.register_tournament, name='register_tournament'),
 ]
 
 if settings.DEBUG:

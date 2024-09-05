@@ -19,7 +19,6 @@ class Role(models.Model):
     def __str__(self):
         return self.name
     
-
 class Sport(models.Model):
     name = models.CharField(max_length=100)
 
@@ -61,3 +60,21 @@ class UserSport(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.full_name} - {self.sport.name} ({self.level})"
+    
+class Tournament(models.Model):
+    PHASE_CHOICES = [
+        ('announcement', 'Tournament Announcement and Promotion'),
+        ('registration_open', 'Tournament Registration Open'),
+        ('registration_close', 'Tournament Registration Close'),
+        ('begin', 'Tournament Begin'),
+        ('end', 'Tournament End'),
+        ('ceremony', 'Tournament Ceremony'),
+    ]
+
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='announcement')
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
